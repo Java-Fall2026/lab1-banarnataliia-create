@@ -1,48 +1,12 @@
 package ua.education.model;
-
 import ua.education.util.EducationUtils;
-import java.util.Objects;
-
-public class Instructor extends ua.common.BaseEntity {
-    private final String instructorCode;
-    private final String fullName;
-    private final String degree;
-
-    public Instructor(String instructorCode, String fullName, String degree) {
-        super();
+public record Instructor(String instructorCode, String fullName, String degree) {
+    public Instructor {
         EducationUtils.validateNotBlank(instructorCode, "Instructor code");
-        EducationUtils.validateNotBlank(fullName, "Instructor fullName");
+        EducationUtils.validateNotBlank(fullName, "Instructor full name");
         EducationUtils.validateNotBlank(degree, "Instructor degree");
-
-        this.instructorCode = EducationUtils.normalizeText(instructorCode);
-        this.fullName = EducationUtils.normalizeText(fullName);
-        this.degree = EducationUtils.normalizeText(degree);
-    }
-
-    public String getInstructorCode() { return instructorCode; }
-    public String getFullName() { return fullName; }
-    public String getDegree() { return degree; }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Instructor that = (Instructor) o;
-        return Objects.equals(instructorCode, that.instructorCode);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(instructorCode);
-    }
-
-    @Override
-    public String toString() {
-        return "Instructor{" +
-                "instructorCode='" + instructorCode + '\'' +
-                ", fullName='" + fullName + '\'' +
-                ", degree='" + degree + '\'' +
-                ", createdAt=" + createdAt +
-                '}';
+        instructorCode = EducationUtils.normalizeText(instructorCode);
+        fullName = EducationUtils.normalizeText(fullName);
+        degree = EducationUtils.normalizeText(degree);
     }
 }

@@ -1,66 +1,43 @@
 package ua.education.model;
-
-import ua.education.util.EducationUtils;
+import java.time.LocalDateTime;
 import java.util.Objects;
-
-public class Course extends ua.common.BaseEntity {
+import ua.education.util.EducationUtils;
+public class Course {
     private final String courseCode;
     private final String title;
     private final Instructor instructor;
-    private final String difficulty;
+    private final CourseLevel difficulty;
+    private final LocalDateTime createdAt;
     private double price;
-
-    private Course(String courseCode, String title, Instructor instructor, String difficulty, double price) {
-        super();
+    private Course(String courseCode, String title, Instructor instructor, CourseLevel difficulty, double price) {
         EducationUtils.validateNotBlank(courseCode, "Course code");
         EducationUtils.validateNotBlank(title, "Course title");
         EducationUtils.validateNotNull(instructor, "Course instructor");
-        EducationUtils.validateDifficulty(difficulty);
-
+        EducationUtils.validateNotNull(difficulty, "Course difficulty");
         this.courseCode = EducationUtils.normalizeText(courseCode);
         this.title = EducationUtils.normalizeText(title);
         this.instructor = instructor;
-        this.difficulty = EducationUtils.normalizeEnum(difficulty);
+        this.difficulty = difficulty;
+        this.createdAt = LocalDateTime.now();
         setPrice(price);
     }
-
-    public static Course of(String courseCode, String title, Instructor instructor, String difficulty, double price) {
+    public static Course of(String courseCode, String title, Instructor instructor, CourseLevel difficulty, double price) {
         return new Course(courseCode, title, instructor, difficulty, price);
     }
-
     public String getCourseCode() { return courseCode; }
     public String getTitle() { return title; }
     public Instructor getInstructor() { return instructor; }
-    public String getDifficulty() { return difficulty; }
+    public CourseLevel getDifficulty() { return difficulty; }
     public double getPrice() { return price; }
-
-    public final void setPrice(double price) {
-        EducationUtils.validatePrice(price);
-        this.price = price;
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public final void setPrice(double price) { EducationUtils.validatePrice(price); this.price = price; }
+    @Override public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Course other)) return false;
+        return Objects.equals(courseCode, other.courseCode);
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Course course = (Course) o;
-        return Objects.equals(courseCode, course.courseCode);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(courseCode);
-    }
-
-    @Override
-    public String toString() {
-        return "Course{" +
-                "courseCode='" + courseCode + '\'' +
-                ", title='" + title + '\'' +
-                ", instructor=" + instructor.getInstructorCode() +
-                ", difficulty='" + difficulty + '\'' +
-                ", price=" + price +
-                ", createdAt=" + createdAt +
-                '}';
+    @Override public int hashCode() { return Objects.hash(courseCode); }
+    @Override public String toString() {
+        return "Course{courseCode='" + courseCode + "', title='" + title + "', difficulty=" + difficulty + ", price=" + price + ", createdAt=" + createdAt + "}";
     }
 }
